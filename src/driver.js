@@ -1,16 +1,19 @@
 'use strict';
 
-const events = require('./events.js');
+const eventPool = require('./events.js');
 
-function confirmation(payload) {
-  console.log('Order ', payload.box.orderID, 'is in-transit');
+function pickedUp(payload) {
+  setTimeout(() => {
+  console.log('Order#', payload.box.orderID, ' has been picked up');
 
-  events.emit('delivered', { order: payload.order });
+  eventPool.emit('delivered', payload);
+}, 1000);
 }
 
 module.exports = {
-  confirmation,
+  pickedUp,
 }
+
 
 
 // functions for driver responses

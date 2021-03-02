@@ -23,11 +23,11 @@ const boxInterface = new Box();
 
 // Event that will be published, setting up subscribers for events.
 eventPool.on('pickup', pickup.newBox);
-eventPool.on('intransit', intransit.intransit);
+eventPool.on('intransit', intransit.pickedUp);
 eventPool.on('delivered', delivered.deliveryConfirmation);
 
 
 // Artificial interaction point.
 setInterval(() => {
-  eventPool.emit('send', { user: usersInterface.create(randomName, 'UPS'), box: boxInterface.create('Wallingford', randomOrderID, randomName, randomAddress) });
-}, 2000);
+  eventPool.emit('pickup', { user: usersInterface.create(randomName, 'UPS'), box: boxInterface.create('Wallingford', randomOrderID, randomName, randomAddress) });
+}, 5000);
