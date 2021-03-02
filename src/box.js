@@ -13,7 +13,6 @@ class Box {
       address
     };
     this.db.push(entry);
-    console.log(entry, 'BOX DB ENTRY');
     return entry;
   }
 }

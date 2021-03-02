@@ -9,11 +9,15 @@ console.log = jest.fn();
 describe('Testing the sending module', () => {
   it('should console log some output', () => {
 
-    let payload = { user: { name: 'Jacob' }, message: { text: 'test', sender: 'Jacob', receiver: 'Jacob' } };
+    let box = { 
+      storeName: 'Wallingford',  
+      orderID: 1000,
+      customerName: 'Carol Smirthington',
+      address: '10000 986th Ave'
+    };
 
-    boxes.newBox(payload);
+    boxes.newBox(box);
     expect(console.log).toHaveBeenCalled();
 
-    
   });
 });

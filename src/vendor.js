@@ -12,7 +12,7 @@ function newBox(payload) {
     `Delivery Address: ${payload.box.address}`
   );
 
-  eventPool.emit('intransit', { order: payload.box, store: payload.box.storeName, orderID: payload.box.orderID, customer: payload.box.customerName, address: payload.box.address });
+  eventPool.emit('intransit', payload);
 }
 
 
