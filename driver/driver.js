@@ -1,8 +1,8 @@
 'use strict';
 
 const io = require('socket.io-client');
-const hostURL = 'http://localhost:3000';
-const driverURL = 'http://localhost:3000/driver';
+const hostURL = 'http://localhost:3000/caps';
+/* const driverURL = 'http://localhost:3000/driver'; */
 
 
 const hostServer = io.connect(hostURL);
@@ -12,34 +12,16 @@ hostServer.on('message', (payload) => {
   console.log('Message received :', payload);
 });
 
-/* 
-eventPool.on('intransit', intransit.pickedUp);
 
-eventEmitter.on('intransit', async (payload) => {
-  console.log('The order for ', payload.box.customerName, ' is on its way.');
-  eventEmitter.emit('delivered', { orderID: payload.box.orderID });
-});
-
-function pickedUp(payload) {
+hostServer.on('pickup', (payload) => {
   setTimeout(() => {
-  console.log('Order#', payload.box.orderID, ' has been picked up');
-
-  eventPool.emit('delivered', payload);
+    console.log('Order#', payload.box.orderID, ' has been picked up');
+    payload.event = 'intransit';
+    hostServer.emit('intransit', payload);
 }, 1000);
-}
-
-
-
-eventPool.on('delivered', delivered.deliveryConfirmation);
-
-eventEmitter.on('delivered', async (payload) => {
-  console.log('Order ', payload.box.orderID, ' is delivered');
-  console.log('Thank you for delivering order# ', payload.box.orderID, ' !!!');
+setTimeout(() => {
+  console.log('Order#', payload.box.orderID, ' has been delivered! :-)');
+  payload.event = 'delivered';
+  hostServer.emit('delivered', payload);
+}, 3000);
 });
-
-function deliveryConfirmation(payload) {
-  setTimeout(() => {
-    console.log('Order#', payload.box.orderID, ' has been delivered! :-)');
-  }, 3000);
-}
- */
