@@ -1,4 +1,4 @@
-'use strict';
+/* 'use strict';
 
 class User {
   constructor() {
@@ -16,3 +16,4 @@ class User {
 }
 
 module.exports = User;
+ */

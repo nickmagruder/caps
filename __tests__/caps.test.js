@@ -6,7 +6,7 @@ const boxes = require('../src/vendor.js');
 
 console.log = jest.fn();
 
-describe('Testing the sending module', () => {
+xdescribe('Testing the sending module', () => {
   it('should console log some output', () => {
 
     let box = { 
