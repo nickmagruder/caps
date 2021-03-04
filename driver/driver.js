@@ -1,27 +1,31 @@
 'use strict';
 
 const io = require('socket.io-client');
-const hostURL = 'http://localhost:3000/caps';
-/* const driverURL = 'http://localhost:3000/driver'; */
+
+const socket = io.connect('http://localhost:3000/caps');
+
+socket.emit('getVendorMessages');
 
 
-const hostServer = io.connect(hostURL);
 
-
-hostServer.on('message', (payload) => {
+socket.on('message', (payload) => {
   console.log('Message received :', payload);
 });
 
 
-hostServer.on('pickup', (payload) => {
+socket.on('pickup', (payload) => {
   setTimeout(() => {
-    console.log('Order#', payload.box.orderID, ' has been picked up');
+    console.log('Order#', payload.orderID, ' has been picked up');
     payload.event = 'intransit';
-    hostServer.emit('intransit', payload);
+    socket.emit('intransit', payload);
+    socket.emit('received', payload);
 }, 1000);
+
 setTimeout(() => {
-  console.log('Order#', payload.box.orderID, ' has been delivered! :-)');
+  console.log('Order#', payload.orderID, ' has been delivered! :-)'); 
   payload.event = 'delivered';
-  hostServer.emit('delivered', payload);
+  socket.emit('delivered', payload);
+  socket.emit('received', payload);
 }, 3000);
+
 });
