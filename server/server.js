@@ -3,33 +3,54 @@
 const socketio = require('socket.io');
 const io = socketio(3000);
 
-/* const vendor = io.of('/vendor');
-const driver = io.of('/driver'); */
-
 const caps = io.of('/caps');
 
+const orderQueue = {
 
-io.on('connection', (socket) => {
-  console.log('New connection created :' + socket.id);
-  });
+  pickup: {},
+  intransit: {},
+  delivered: {},
+  received: {}, // all received messages go here once received 
 
-caps.on('connection', (capsSocket) => {
+}
 
-  console.log('New Caps Connection ', capsSocket.id);
 
-  capsSocket.on('pickup', (payload) => {
-    console.log('PICKUP EVENT: ', payload);
-    capsSocket.broadcast.emit('pickup', payload);
-  });
+// handlers needed:
+//    received
+//    getALL
+//    delivered
 
-  capsSocket.on('intransit', (payload) => {
-    console.log('INTRANSIT EVENT: ', payload);
-    capsSocket.broadcast.emit('intransit', payload);
-  });
 
-  capsSocket.on('delivered', (payload) => {
-    console.log('DELIVERED EVENT: ', payload);
-    capsSocket.broadcast.emit('delivered', payload);
-  });
+caps.on('connection', (socket) => {
+  console.log('Socket connected : ', socket.id);
 
+socket.on('pickup', (payload) => {
+  console.log(payload.orderID);
+  orderQueue.pickup[payload.orderID] = payload;
+  socket.broadcast.emit('pickup', payload);
+/*   console.log(orderQueue); */
+});
+
+socket.on('intransit', (payload) => {
+/*   console.log('INTRANSIT EVENT: ', payload.orderID); */
+  socket.broadcast.emit('intransit', payload);
+});
+
+socket.on('delivered', (payload) => {
+  delete orderQueue.pickup[payload.orderID];
+  orderQueue.delivered[payload] = payload;
+  socket.broadcast.emit('delivered', payload);
+});
+
+  socket.on('getDriverMessages', () => {
+    for (let key in orderQueue.pickup) {
+      socket.emit('pickup', orderQueue.pickup[key]);
+    }
+
+    socket.on('getVendorMessages', () => {
+      for (let key in orderQueue.delivered) {
+        socket.emit('delivered', orderQueue.delivered[key]);
+      }
+});
+});
 });
